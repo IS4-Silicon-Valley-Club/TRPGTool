@@ -59,6 +59,7 @@ public class Client extends JFrame implements Runnable, ActionListener {
 	private JButton renameButton;		//「名前の変更」ボタン
 	private JButton addRoomButton;		//「部屋を追加」ボタン
 	private JButton enterRoomButton;	//「入室・退室」ボタン
+	private JButton dicerollButton;	    //「ダイスロール」ボタン
 
 	public Client() {
 		super(APPNAME);
@@ -79,6 +80,7 @@ public class Client extends JFrame implements Runnable, ActionListener {
 		renameButton = new JButton("名前の変更");
 		addRoomButton = new JButton("部屋を追加");
 		enterRoomButton = new JButton("入室");
+		dicerollButton = new JButton("ダイスロール");
 
 		submitButton.addActionListener(this);
 		submitButton.setActionCommand("submit");
@@ -91,6 +93,9 @@ public class Client extends JFrame implements Runnable, ActionListener {
 
 		enterRoomButton.addActionListener(this);
 		enterRoomButton.setActionCommand("enterRoom");
+		
+		dicerollButton.addActionListener(this);
+		dicerollButton.setActionCommand("dicerole");
 
 		roomPanel.setLayout(new BorderLayout());
 		roomPanel.add(new JLabel("チャットルーム"), BorderLayout.NORTH);
@@ -106,6 +111,7 @@ public class Client extends JFrame implements Runnable, ActionListener {
 		topPanel.add(nameTextField);
 		topPanel.add(renameButton);
 		topPanel.add(addRoomButton);
+		topPanel.add(dicerollButton);
 
 		nameTextField.setPreferredSize(new Dimension(200, nameTextField.getPreferredSize().height));
 
@@ -256,6 +262,9 @@ public class Client extends JFrame implements Runnable, ActionListener {
 		else if(cmd.equals("exitRoom")) {	//退室
 			sendMessage("exitRoom " + roomName);
 			exitedRoom();
+		}
+		else if(cmd.equals("dicerole")) {
+			sendMessage("dicerole");
 		}
 	}
 
