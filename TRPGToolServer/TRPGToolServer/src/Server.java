@@ -92,7 +92,7 @@ public class Server {
 		}
 	}
 	//すべてのチャットルームを削除する
-	public void clearChatRoom() { 
+	public void clearChatRoom() {
 		roomList.clear();
 
 		//すべてのユーザーにチャットルームが更新されたことを通知する

@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Random;
 
 //チャットルームオブジェクト
 class ChatRoom implements MessageListener {
@@ -11,6 +12,9 @@ class ChatRoom implements MessageListener {
 	//このチャットルームに参加している全てのユーザーの動的配列
 	//この配列には hostUser も含む
 	private ArrayList<ChatClientUser> roomUsers;
+
+	//ダイスロール用Randomクラス
+	private Random dice = new Random();
 
 	public ChatRoom(String name, ChatClientUser hostUser) {
 		roomUsers = new ArrayList<ChatClientUser>();
@@ -83,6 +87,24 @@ class ChatRoom implements MessageListener {
 		else if(e.getName().equals("setName")) {
 			for(int i = 0 ; i < roomUsers.size() ; i++) {
 				roomUsers.get(i).reachedMessage("getUsers", name);
+			}
+		}
+		//ユーザーがダイスロールをした
+		else if(e.getName().equals("dicerole")) {
+			String s[] = e.getValue().split(" ");
+
+			int dicecount = Integer.parseInt(s[0]);
+			int dicenumber = Integer.parseInt(s[1]);
+			String dicevalue = " ";
+			int total = 0;
+			for(int i = 0 ; i < dicecount; i++) {
+				int rmd = dice.nextInt(dicenumber) + 1;
+				dicevalue +=  (rmd) + " ";
+				total += rmd;
+			}
+			for(int i = 0 ; i < roomUsers.size() ; i++) {
+				String message = "msg " + source.getName() + ">" + dicecount + "d" + dicenumber + " [" + dicevalue + "] 合計 " + total;
+				roomUsers.get(i).sendMessage(message);
 			}
 		}
 	}
