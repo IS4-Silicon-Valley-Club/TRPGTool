@@ -91,11 +91,26 @@ class ChatRoom implements MessageListener {
 		}
 		//ユーザーがダイスロールをした
 		else if(e.getName().equals("dicerole")) {
-			int dicevalue = dice.nextInt(100);
-			for(int i = 0 ; i < roomUsers.size() ; i++) {
-				String message = "msg " + source.getName() + ">" + dicevalue;
-				roomUsers.get(i).sendMessage(message);
+			
+			try{
+				String s[] = e.getValue().split(" ");
+				int dicecount = Integer.parseInt(s[0]);
+				int dicenumber = Integer.parseInt(s[1]);
+				String dicevalue = " ";
+				int total = 0;
+				for(int i = 0 ; i < dicecount; i++) {
+					int rmd = dice.nextInt(dicenumber) + 1;
+					dicevalue +=  (rmd) + " ";
+					total += rmd;
+				}
+				for(int i = 0 ; i < roomUsers.size() ; i++) {
+					String message = "msg " + source.getName() + ">" + dicecount + "d" + dicenumber + " [" + dicevalue + "] 合計 " + total;
+					roomUsers.get(i).sendMessage(message);
+				}
+			} catch(NumberFormatException err) {
+				source.sendMessage("error 値が適切ではありません");
 			}
+			
 		}
 	}
 }

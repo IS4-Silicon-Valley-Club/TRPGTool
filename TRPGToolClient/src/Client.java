@@ -264,7 +264,7 @@ public class Client extends JFrame implements Runnable, ActionListener {
 			exitedRoom();
 		}
 		else if(cmd.equals("dicerole")) {
-			sendMessage("dicerole");
+			sendMessage("dicerole " + nameTextField.getText());
 		}
 	}
 
