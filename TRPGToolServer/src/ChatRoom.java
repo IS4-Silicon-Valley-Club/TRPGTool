@@ -83,6 +83,15 @@ class ChatRoom implements MessageListener {
 				roomUsers.get(i).sendMessage(message);
 			}
 		}
+		else if (e.getName().equals("whisper")) {
+			String s[] = e.getValue().split(" ", 2);
+			for(int i = 0 ; i < roomUsers.size() ; i++) {
+				if (s[0].equals(roomUsers.get(i).getName()) ) {
+					String message = "msg" + " " + source.getName() + " からのウィスパー>" + s[1];
+					roomUsers.get(i).sendMessage(message);
+				}
+			}
+		}
 		//ユーザーが名前を変更した
 		else if(e.getName().equals("setName")) {
 			for(int i = 0 ; i < roomUsers.size() ; i++) {
@@ -94,6 +103,7 @@ class ChatRoom implements MessageListener {
 			
 			try{
 				String s[] = e.getValue().split(" ");
+				s = s[0].split("d");
 				int dicecount = Integer.parseInt(s[0]);
 				int dicenumber = Integer.parseInt(s[1]);
 				String dicevalue = " ";
@@ -108,7 +118,7 @@ class ChatRoom implements MessageListener {
 					roomUsers.get(i).sendMessage(message);
 				}
 			} catch(NumberFormatException err) {
-				source.sendMessage("error 値が適切ではありません");
+				source.sendMessage("error 入力が正しくありません　例：2d6");
 			}
 			
 		}
