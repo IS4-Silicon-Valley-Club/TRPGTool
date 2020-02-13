@@ -12,10 +12,10 @@ class ChatRoom implements MessageListener {
 	//このチャットルームに参加している全てのユーザーの動的配列
 	//この配列には hostUser も含む
 	private ArrayList<ChatClientUser> roomUsers;
-	
+
 	//ダイスロール用Randomクラス
 	private Random dice = new Random();
-	
+
 	public ChatRoom(String name, ChatClientUser hostUser) {
 		roomUsers = new ArrayList<ChatClientUser>();
 
@@ -40,7 +40,7 @@ class ChatRoom implements MessageListener {
 		user.addMessageListener(this);
 		roomUsers.add(user);
 		for(int i = 0 ; i < roomUsers.size() ; i++) {
-			roomUsers.get(i).reachedMessage("getUsers", name);
+			roomUsers.get(i).reachedMessage("getUsers", name, "");
 			roomUsers.get(i).sendMessage("msg >" + user.getName() + " さんが入室しました");
 		}
 	}
@@ -62,7 +62,7 @@ class ChatRoom implements MessageListener {
 		user.removeMessageListener(this);
 		roomUsers.remove(user);
 		for(int i = 0 ; i < roomUsers.size() ; i++) {
-			roomUsers.get(i).reachedMessage("getUsers", name);
+			roomUsers.get(i).reachedMessage("getUsers", name, "");
 			roomUsers.get(i).sendMessage("msg >" + user.getName() + " さんが退室しました");
 		}
 
@@ -79,28 +79,33 @@ class ChatRoom implements MessageListener {
 		//ユーザーが発言した
 		if (e.getName().equals("msg")) {
 			for(int i = 0 ; i < roomUsers.size() ; i++) {
-				String message = e.getName() + " " + source.getName() + ">" + e.getValue();
+				String message = e.getName() + " " + source.getName() + ">" + e.getValue() + " " + e.getDate();
 				roomUsers.get(i).sendMessage(message);
 			}
 		}
 		else if (e.getName().equals("whisper")) {
 			String s[] = e.getValue().split(" ", 2);
 			for(int i = 0 ; i < roomUsers.size() ; i++) {
-				if (s[0].equals(roomUsers.get(i).getName()) ) {
+				if (s[0].equals(roomUsers.get(i).getName() ) ){
 					String message = "msg" + " " + source.getName() + " からのウィスパー>" + s[1];
 					roomUsers.get(i).sendMessage(message);
+				}
+				if(source.getName().contentEquals(roomUsers.get(i).getName())){
+					String message = "msg" + " " +s[0] + " へのウィスパー>" + s[1];
+					roomUsers.get(i).sendMessage(message);
+
 				}
 			}
 		}
 		//ユーザーが名前を変更した
 		else if(e.getName().equals("setName")) {
 			for(int i = 0 ; i < roomUsers.size() ; i++) {
-				roomUsers.get(i).reachedMessage("getUsers", name);
+				roomUsers.get(i).reachedMessage("getUsers", name, "");
 			}
 		}
 		//ユーザーがダイスロールをした
 		else if(e.getName().equals("dicerole")) {
-			
+
 			try{
 				String s[] = e.getValue().split(" ");
 				s = s[0].split("d");
@@ -120,7 +125,7 @@ class ChatRoom implements MessageListener {
 			} catch(NumberFormatException err) {
 				source.sendMessage("error 入力が正しくありません　例：2d6");
 			}
-			
+
 		}
 	}
 }

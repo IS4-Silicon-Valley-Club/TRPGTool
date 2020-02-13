@@ -60,7 +60,7 @@ public class Server {
 
 		//すべてのユーザーにチャットルームが更新されたことを通知する
 		for(int i = 0 ; i < userList.size() ; i++) {
-			userList.get(i).reachedMessage("getRooms" , "");
+			userList.get(i).reachedMessage("getRooms" , "", "");
 		}
 	}
 	//指定した名前のチャットルームを取得する
@@ -88,16 +88,16 @@ public class Server {
 
 		//すべてのユーザーにチャットルームが更新されたことを通知する
 		for(int i = 0 ; i < userList.size() ; i++) {
-			userList.get(i).reachedMessage("getRooms" , "");
+			userList.get(i).reachedMessage("getRooms" , "", "");
 		}
 	}
 	//すべてのチャットルームを削除する
-	public void clearChatRoom() { 
+	public void clearChatRoom() {
 		roomList.clear();
 
 		//すべてのユーザーにチャットルームが更新されたことを通知する
 		for(int i = 0 ; i < userList.size() ; i++) {
-			userList.get(i).reachedMessage("getRooms" , "");
+			userList.get(i).reachedMessage("getRooms" , "", "");
 		}
 	}
 

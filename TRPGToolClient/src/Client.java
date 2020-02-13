@@ -13,6 +13,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.time.LocalDateTime;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -29,6 +30,7 @@ public class Client extends JFrame implements Runnable, ActionListener {
 		Client window = new Client();
 		window.setSize(800, 600);
 		window.setVisible(true);
+
 	}
 
 	//アプリケーション名
@@ -56,10 +58,11 @@ public class Client extends JFrame implements Runnable, ActionListener {
 	private JTextField msgTextField;	//メッセージ入力用の一行テキスト
 	private JTextField nameTextField;	//ユーザー名やチャットルーム名を入力する一行テキスト
 	private JButton submitButton;		//「送信」ボタン
+	private JButton whisperButton;		//「ウィスパー」ボタン
 	private JButton renameButton;		//「名前の変更」ボタン
 	private JButton addRoomButton;		//「部屋を追加」ボタン
 	private JButton enterRoomButton;	//「入室・退室」ボタン
-	private JButton dicerollButton;	    //「ダイスロール」ボタン
+	private JButton dicerollButton;	//「ダイスロール」ボタン
 
 	public Client() {
 		super(APPNAME);
@@ -71,12 +74,14 @@ public class Client extends JFrame implements Runnable, ActionListener {
 		JPanel roomPanel = new JPanel();
 		JPanel userPanel = new JPanel();
 
+
 		roomList = new JList();
 		userList = new JList();
 		msgTextArea = new JTextArea();
 		msgTextField = new JTextField();
 		nameTextField = new JTextField();
 		submitButton = new JButton("送信");
+		whisperButton = new JButton("ウィスパー");
 		renameButton = new JButton("名前の変更");
 		addRoomButton = new JButton("部屋を追加");
 		enterRoomButton = new JButton("入室");
@@ -84,6 +89,9 @@ public class Client extends JFrame implements Runnable, ActionListener {
 
 		submitButton.addActionListener(this);
 		submitButton.setActionCommand("submit");
+
+		whisperButton.addActionListener(this);
+		whisperButton.setActionCommand("whisper");
 
 		renameButton.addActionListener(this);
 		renameButton.setActionCommand("rename");
@@ -93,9 +101,9 @@ public class Client extends JFrame implements Runnable, ActionListener {
 
 		enterRoomButton.addActionListener(this);
 		enterRoomButton.setActionCommand("enterRoom");
-		
+
 		dicerollButton.addActionListener(this);
-		dicerollButton.setActionCommand("dicerole");
+		dicerollButton.setActionCommand("diceroll");
 
 		roomPanel.setLayout(new BorderLayout());
 		roomPanel.add(new JLabel("チャットルーム"), BorderLayout.NORTH);
@@ -122,6 +130,7 @@ public class Client extends JFrame implements Runnable, ActionListener {
 		buttomPanel.setLayout(new BorderLayout());
 		buttomPanel.add(msgTextField, BorderLayout.CENTER);
 		buttomPanel.add(submitButton, BorderLayout.EAST);
+		buttomPanel.add(whisperButton, BorderLayout.WEST);
 
 		//テキストエリアはメッセージを表示するだけなので編集不可に設定
 		msgTextArea.setEditable(false);
@@ -155,10 +164,10 @@ public class Client extends JFrame implements Runnable, ActionListener {
 	public void connectServer() {
 		try {
 			socket = new Socket(HOST, PORT);
-			msgTextArea.append(">サーバーに接続しました\n"); 
+			msgTextArea.append(">サーバーに接続しました\n");
 		}
 		catch(Exception err) {
-			msgTextArea.append("ERROR>" + err + "\n"); 
+			msgTextArea.append("ERROR>" + err + "\n");
 		}
 	}
 
@@ -204,15 +213,15 @@ public class Client extends JFrame implements Runnable, ActionListener {
 		}
 		//メッセージが送られてきた
 		else if (name.equals("msg")) {
-			msgTextArea.append(value + "\n"); 
+			msgTextArea.append(value + "\n");
 		}
 		//処理に成功した
 		else if (name.equals("successful")) {
-			if (value.equals("setName")) msgTextArea.append(">名前を変更しました\n"); 
+			if (value.equals("setName")) msgTextArea.append(">名前を変更しました\n");
 		}
 		//エラーが発生した
 		else if (name.equals("error")) {
-			msgTextArea.append("ERROR>" + value + "\n"); 
+			msgTextArea.append("ERROR>" + value + "\n");
 		}
 	}
 
@@ -238,8 +247,10 @@ public class Client extends JFrame implements Runnable, ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		String cmd = e.getActionCommand();
 
+		LocalDateTime d = LocalDateTime.now();
+
 		if(cmd.equals("submit")) {	//送信
-			sendMessage("msg " + msgTextField.getText());
+			sendMessage("msg " + msgTextField.getText() + " " + d.getDayOfMonth()+ "日" + d.getHour() + "時" + d.getMinute() + "分");
 			msgTextField.setText("");
 		}
 		else if(cmd.equals("rename")) {	//名前の変更
@@ -263,8 +274,16 @@ public class Client extends JFrame implements Runnable, ActionListener {
 			sendMessage("exitRoom " + roomName);
 			exitedRoom();
 		}
-		else if(cmd.equals("dicerole")) {
-			sendMessage("dicerole " + nameTextField.getText());
+		else if(cmd.equals("diceroll")) {
+			msgTextField.setText("");
+			sendMessage("dicerole "+ nameTextField.getText() + " " + d.getDayOfMonth()+ "日" + d.getHour() + "時" + d.getMinute() + "分");
+		}
+		else if(cmd.equals("whisper")) {
+			Object user = userList.getSelectedValue();
+			if(user != null) {
+				String userName = user.toString();
+				sendMessage("whisper " + user + " " + msgTextField.getText() + " " + d.getDayOfMonth()+ "日" + d.getHour() + "時" + d.getMinute() + "分");
+			}
 		}
 	}
 

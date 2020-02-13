@@ -4,12 +4,14 @@ class MessageEvent extends EventObject {
 	private ChatClientUser source;
 	private String name;
 	private String value;
+	private String date;
 
-	public MessageEvent(ChatClientUser source, String name, String value) {
+	public MessageEvent(ChatClientUser source, String name, String value, String date) {
 		super(source);
 		this.source = source;
 		this.name = name;
 		this.value = value;
+		this.date = date;
 	}
 
 	//イベントを発生させたユーザー
@@ -20,4 +22,7 @@ class MessageEvent extends EventObject {
 
 	//このイベントの
 	public String getValue() { return this.value; }
+
+	//日付を返す
+	public String getDate() { return this.date; }
 }

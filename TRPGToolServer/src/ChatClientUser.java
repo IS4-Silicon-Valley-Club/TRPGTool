@@ -53,8 +53,9 @@ class ChatClientUser implements Runnable, MessageListener {
 				String[] msg = line.split(" ", 2);
 				String msgName = msg[0];
 				String msgValue = (msg.length < 2 ? "" : msg[1]);
+				String msgDate = (msg.length < 3 ? "" : msg[2]);
 
-				reachedMessage(msgName, msgValue);
+				reachedMessage(msgName, msgValue, msgDate);
 			}
 		}
 		catch(Exception err) { err.printStackTrace(); }
@@ -79,7 +80,7 @@ class ChatClientUser implements Runnable, MessageListener {
 				String before = getName();
 				setName(name);
 				sendMessage("successful setName");
-				reachedMessage("msg", before + " から " + name + " に名前を変更しました");
+				reachedMessage("msg", before + " から " + name + " に名前を変更しました","");
 			}
 			else {
 				sendMessage("error 名前に半角空白文字を使うことはできません");
@@ -163,8 +164,8 @@ class ChatClientUser implements Runnable, MessageListener {
 		}
 	}
 	//このユーザーが受け取ったメッセージを処理する
-	public void reachedMessage(String name, String value) {
-		MessageEvent event = new MessageEvent(this, name, value);
+	public void reachedMessage(String name, String value, String date) {
+		MessageEvent event = new MessageEvent(this, name, value, date);
 		for(int i = 0 ; i < messageListeners.size() ; i++ ) {
 			messageListeners.get(i).messageThrow(event);
 		}
