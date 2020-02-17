@@ -115,7 +115,7 @@ public class Client extends JFrame implements Runnable, ActionListener {
 		userPanel.add(new JScrollPane(userList), BorderLayout.CENTER);
 
 		topPanel.setLayout(new FlowLayout());
-		topPanel.add(new JLabel("コマンド"));
+		topPanel.add(new JLabel("名前"));
 		topPanel.add(nameTextField);
 		topPanel.add(renameButton);
 		topPanel.add(addRoomButton);
@@ -276,7 +276,8 @@ public class Client extends JFrame implements Runnable, ActionListener {
 		}
 		else if(cmd.equals("diceroll")) {
 			msgTextField.setText("");
-			sendMessage("dicerole "+ nameTextField.getText() + " " + d.getDayOfMonth()+ "日" + d.getHour() + "時" + d.getMinute() + "分");
+			sendMessage("dicerole "+ msgTextField.getText() + " " + d.getDayOfMonth()+ "日" + d.getHour() + "時" + d.getMinute() + "分");
+			msgTextField.setText("");
 		}
 		else if(cmd.equals("whisper")) {
 			Object user = userList.getSelectedValue();

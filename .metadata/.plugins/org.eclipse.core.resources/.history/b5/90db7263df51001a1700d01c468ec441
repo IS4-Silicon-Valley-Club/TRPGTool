@@ -115,7 +115,7 @@ public class Client extends JFrame implements Runnable, ActionListener {
 		userPanel.add(new JScrollPane(userList), BorderLayout.CENTER);
 
 		topPanel.setLayout(new FlowLayout());
-		topPanel.add(new JLabel("コマンド"));
+		topPanel.add(new JLabel("名前"));
 		topPanel.add(nameTextField);
 		topPanel.add(renameButton);
 		topPanel.add(addRoomButton);
